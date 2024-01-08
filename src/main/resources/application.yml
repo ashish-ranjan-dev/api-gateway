@@ -1,0 +1,35 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    prefer-ip-address: true
+server:
+  port: 8069
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: friendship-service
+          predicates:
+            - Path=/friendship/**
+          uri: lb://friendship-service
+        - id: auth-service
+          predicates:
+            - Path=/auth/**
+          uri: lb://auth-service
+        - id: expense-service
+          predicates:
+            - Path=/expense/**
+          uri: lb://expense-service
+        - id: outing-service
+          predicates:
+            - Path=/outing/**
+          uri: lb://outing-service
